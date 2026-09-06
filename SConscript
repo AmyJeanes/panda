@@ -102,7 +102,7 @@ def build_project(project_name, project, main, extra_flags):
     BUILDERS={
       'Objcopy': Builder(generator=objcopy, suffix='.bin', src_suffix='.elf')
     },
-    tools=["default", "compilation_db"],
+    tools=["mingw" if os.name == "nt" else "default", "compilation_db"],  # default picks MSVC on Windows
   )
 
   startup = env.Object(project["STARTUP_FILE"])
@@ -179,4 +179,5 @@ build_project("panda_jungle_h7", base_project_h7, "./board/jungle/main.c", flags
 build_project("body_h7", base_project_h7, "./board/body/main.c", ["-DPANDA_BODY"])
 
 # test files
-SConscript('tests/libpanda/SConscript')
+if os.name != "nt":  # TODO: host-side safety library (-nostdlib) does not link as a Windows DLL
+  SConscript('tests/libpanda/SConscript')
