@@ -29,15 +29,29 @@ jobs:
         run: ${{ env.RUN }} "CERT=board/certs/debug RELEASE=1 scons"
 
   test:
-    name: ./test.sh
+    name: ./test.sh (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ['macos-latest', 'ubuntu-latest']
+        include:
+          - os: windows-latest
+            shell: msys2 {0}  # the MSYS2 CLANG64 shell from setup-msys2
     timeout-minutes: 10
+    defaults:
+      run:
+        shell: ${{ matrix.shell || 'bash -e {0}' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows'
+        with:
+          msystem: CLANG64
+          path-type: inherit  # uv and Git for Windows stay visible
+          install: mingw-w64-clang-x86_64-clang  # for libpanda; the firmware toolchain comes from uv
+      - uses: astral-sh/setup-uv@v5
+        if: runner.os == 'Windows'
       - run: ./test.sh
 
   windows:

@@ -29,8 +29,9 @@ dev = [
   "pytest-timeout",
   "ruff",
   "setuptools",
-  "gcc-arm-none-eabi @ git+https://github.com/commaai/dependencies.git@release-gcc-arm-none-eabi#subdirectory=gcc-arm-none-eabi",
-  "cppcheck @ git+https://github.com/commaai/dependencies.git@release-cppcheck#subdirectory=cppcheck",
+  # from PyPI like the other comma-deps consumers (the release shim branches have no Windows build); the wheels need 3.12
+  "comma-deps-gcc-arm-none-eabi ; python_full_version >= '3.12'",
+  "comma-deps-cppcheck ; python_full_version >= '3.12'",
 ]
 
 [build-system]
