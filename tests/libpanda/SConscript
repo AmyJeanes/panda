@@ -13,6 +13,7 @@ env = Environment(
   tools=["mingw" if os.name == "nt" else "default"],  # the default tool picks MSVC on Windows
 )
 if os.name == "nt":
+  env["ENV"] = os.environ  # clang lives on the MSYS2 shell's PATH; SCons' default ENV has only the system directories
   env["CC"] = "clang"  # the mingw tool assumes gcc
   env["no_import_lib"] = 1  # nothing links against the DLL
   env.Append(CFLAGS=["-mno-ms-bitfields"])  # mingw's MS layout would put CANPacket_t's checksum at byte 8 instead of 5
