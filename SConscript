@@ -102,7 +102,7 @@ def build_project(project_name, project, main, extra_flags):
     BUILDERS={
       'Objcopy': Builder(generator=objcopy, suffix='.bin', src_suffix='.elf')
     },
-    tools=["default", "compilation_db"],
+    tools=["mingw" if os.name == "nt" else "default", "compilation_db"],  # default picks MSVC on Windows
   )
 
   startup = env.Object(project["STARTUP_FILE"])
