@@ -13,7 +13,7 @@ NC='\033[0m'
 : "${CPPCHECK_DIR:=$(python -c "import cppcheck; print(cppcheck.DIR)")}"
 
 # ensure checked in coverage table is up to date
-cd $DIR
+cd "$DIR"
 if [ -z "$SKIP_TABLES_DIFF" ]; then
   python $CPPCHECK_DIR/addons/misra.py -generate-table > coverage_table
   if ! git diff --quiet coverage_table; then
@@ -22,7 +22,7 @@ if [ -z "$SKIP_TABLES_DIFF" ]; then
   fi
 fi
 
-cd $PANDA_DIR
+cd "$PANDA_DIR"
 if [ -z "${SKIP_BUILD}" ]; then
   scons
 fi
@@ -71,7 +71,7 @@ cppcheck $PANDA_OPTS -DSTM32H7 -DSTM32H725xx -I $PANDA_DIR/board/stm32h7/inc/ $P
 printf "\n${GREEN}Success!${NC} took $SECONDS seconds\n"
 
 # ensure list of checkers is up to date
-cd $DIR
+cd "$DIR"
 if [ -z "$SKIP_TABLES_DIFF" ] && ! git diff --quiet $CHECKLIST; then
   echo -e "\n${YELLOW}WARNING: Cppcheck checkers.txt report has changed. Review and commit...${NC}"
   exit 4
